@@ -13,6 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), RecylerViewAdapter.Listener {
     //Disposable  -> Kullan at tek kullanımlık hafızada yer tutmaması icin
 
     private var compositeDisposable : CompositeDisposable? = null
+    private var job: Job? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +56,27 @@ class MainActivity : AppCompatActivity(), RecylerViewAdapter.Listener {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build().create(CryptoAPI::class.java)
+            .build()
+            .create(CryptoAPI::class.java)
+
+//        job = CoroutineScope(Dispatchers.IO).launch {
+//            val response = retrofit.getData()
+//
+//            withContext(Dispatchers.Main){
+//                if (response.isSuccessful){
+//                    response.body()?.let {
+//                        cryptoModels= ArrayList(it)
+//                        cryptoModels?.let {
+//                            recylerViewAdapter= RecylerViewAdapter(it,this@MainActivity)
+//                            recyclerView.adapter = recylerViewAdapter
+//                        }
+//                    }
+//                }
+//            }
+//        }
+
+
+
 
         compositeDisposable?.add(retrofit.getData()
             .subscribeOn(Schedulers.io())   //gelen veriyi dinliyor
@@ -123,7 +145,7 @@ val call = service.getData()
 
     override fun onDestroy() {
         super.onDestroy()
-
+//        job?.cancel()
         compositeDisposable?.clear()
     }
 
