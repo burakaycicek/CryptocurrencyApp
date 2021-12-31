@@ -32,6 +32,9 @@ class MainActivity : AppCompatActivity(), RecylerViewAdapter.Listener {
     private var compositeDisposable : CompositeDisposable? = null
     private var job: Job? = null
 
+//    val exceptionHandler = CoroutineExceptionHandler { coroutineContext, throwable ->
+//        println("Error: ${throwable.localizedMessage}")
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity(), RecylerViewAdapter.Listener {
             .build()
             .create(CryptoAPI::class.java)
 
-//        job = CoroutineScope(Dispatchers.IO).launch {
+//        job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
 //            val response = retrofit.getData()
 //
 //            withContext(Dispatchers.Main){
